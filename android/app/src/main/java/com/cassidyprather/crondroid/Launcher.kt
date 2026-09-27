@@ -4,7 +4,7 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
+import androidx.core.net.toUri
 import android.widget.Toast
 
 /** Builds and starts the intent a schedule describes. */
@@ -16,7 +16,7 @@ object Launcher {
         if (schedule.url.isBlank()) {
             return pkg?.let { pm.getLaunchIntentForPackage(it) }?.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
-        val view = Intent(Intent.ACTION_VIEW, Uri.parse(schedule.url)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        val view = Intent(Intent.ACTION_VIEW, schedule.url.toUri()).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         if (pkg != null) {
             val targeted = Intent(view).setPackage(pkg)
             if (targeted.resolveActivity(pm) != null) return targeted
@@ -49,7 +49,7 @@ object Launcher {
         val query = if (url.isBlank()) {
             Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER)
         } else {
-            Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            Intent(Intent.ACTION_VIEW, url.toUri())
         }
         return pm.queryIntentActivities(query, PackageManager.MATCH_ALL)
             .map { AppChoice(it.activityInfo.packageName, it.loadLabel(pm).toString()) }

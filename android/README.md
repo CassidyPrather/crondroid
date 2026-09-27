@@ -42,10 +42,10 @@ then opens the link. A small alarm icon in the status bar shows that a schedule 
 
 - `AlarmScheduler` arms each schedule with `AlarmManager.setAlarmClock`. That call fires
   at the exact minute, even in Doze.
-- `AlarmReceiver` handles the alarm. It starts `LaunchActivity` directly when Crondroid
+- `AlarmReceiver` handles the alarm. It starts `FireActivity` directly when Crondroid
   may display over other apps. Otherwise it posts a full-screen notification. Then it
   arms the next repeat.
-- `LaunchActivity` shows over the lock screen, asks you to unlock, and opens the target.
+- `FireActivity` shows over the lock screen, asks you to unlock, and opens the target.
 - `RescheduleReceiver` re-arms everything after a reboot, an app update, or a clock or
   time zone change.
 

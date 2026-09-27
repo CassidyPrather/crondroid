@@ -12,7 +12,7 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
-/** Runs when a schedule's alarm goes off: brings up [LaunchActivity] and arms the next occurrence. */
+/** Runs when a schedule's alarm goes off: brings up [FireActivity] and arms the next occurrence. */
 class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         val id = intent.getIntExtra(AlarmScheduler.EXTRA_ID, -1)
@@ -36,13 +36,13 @@ class AlarmReceiver : BroadcastReceiver() {
         private const val CHANNEL_ID = "launches"
 
         fun fire(context: Context, schedule: Schedule) {
-            val launch = LaunchActivity.intent(context, schedule.id)
+            val launch = FireActivity.intent(context, schedule.id)
             if (Settings.canDrawOverlays(context)) {
                 // "Display over other apps" exempts us from background activity-start limits.
                 context.startActivity(launch)
                 return
             }
-            // Otherwise a full-screen notification opens LaunchActivity when the phone is locked or idle,
+            // Otherwise a full-screen notification opens FireActivity when the phone is locked or idle,
             // and shows as a heads-up notification to tap while the phone is in use.
             val nm = context.getSystemService(NotificationManager::class.java)
             nm.createNotificationChannel(

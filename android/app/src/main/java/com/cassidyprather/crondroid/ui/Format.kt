@@ -30,7 +30,7 @@ fun describeNext(schedule: Schedule, now: ZonedDateTime = ZonedDateTime.now()): 
 }
 
 fun describeDuration(duration: Duration): String {
-    val totalMinutes = (duration.toMinutes() + if (duration.toSecondsPart() > 0) 1 else 0).coerceAtLeast(1)
+    val totalMinutes = (duration.toMinutes() + if (duration.seconds % 60 > 0) 1 else 0).coerceAtLeast(1)
     val days = totalMinutes / (24 * 60)
     val hours = totalMinutes / 60 % 24
     val minutes = totalMinutes % 60

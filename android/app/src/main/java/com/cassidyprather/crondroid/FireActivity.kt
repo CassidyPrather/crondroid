@@ -32,7 +32,7 @@ import com.cassidyprather.crondroid.ui.CrondroidTheme
  * Shown when a schedule fires. It can appear over the lock screen, asks you to unlock if needed,
  * then opens the schedule's link or app and gets out of the way.
  */
-class LaunchActivity : ComponentActivity() {
+class FireActivity : ComponentActivity() {
     private var schedule by mutableStateOf<Schedule?>(null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -91,7 +91,7 @@ class LaunchActivity : ComponentActivity() {
     }
 
     companion object {
-        fun intent(context: Context, id: Int): Intent = Intent(context, LaunchActivity::class.java)
+        fun intent(context: Context, id: Int): Intent = Intent(context, FireActivity::class.java)
             .putExtra(AlarmScheduler.EXTRA_ID, id)
             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
     }

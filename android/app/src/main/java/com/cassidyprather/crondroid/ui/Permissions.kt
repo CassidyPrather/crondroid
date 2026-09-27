@@ -5,7 +5,6 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -26,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import com.cassidyprather.crondroid.AlarmScheduler
 
 private data class Requirement(
@@ -68,7 +68,7 @@ fun PermissionsCard(refreshKey: Int, onChanged: () -> Unit) {
 }
 
 private fun requirements(context: Context, requestNotifications: () -> Unit): List<Requirement> {
-    val packageUri = Uri.parse("package:${context.packageName}")
+    val packageUri = "package:${context.packageName}".toUri()
     fun openSettings(action: String) = {
         context.startActivity(Intent(action, packageUri).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
     }
