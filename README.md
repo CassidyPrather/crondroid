@@ -1,5 +1,7 @@
 # Rust Template
 
+> **Looking for the Android scheduling app?** It lives in [`android/`](android/README.md).
+
 Cassidy's opinionated Rust template. Enter at your own peril.
 
 ## Usage
