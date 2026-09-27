@@ -4,6 +4,7 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import java.time.ZonedDateTime
 
 /** Registers schedules with the system alarm clock so they fire on time, even in Doze. */
@@ -20,7 +21,7 @@ object AlarmScheduler {
         val triggerAt = next.toInstant().toEpochMilli()
         val alarmManager = context.getSystemService(AlarmManager::class.java)
         val operation = alarmIntent(context, schedule.id, triggerAt)
-        if (alarmManager.canScheduleExactAlarms()) {
+        if (canScheduleExact(context)) {
             val show = PendingIntent.getActivity(
                 context,
                 schedule.id,
@@ -33,6 +34,10 @@ object AlarmScheduler {
         }
         return next
     }
+
+    /** Exact alarms need a grant only on Android 12 (API 31/32); later versions auto-grant USE_EXACT_ALARM. */
+    fun canScheduleExact(context: Context): Boolean = Build.VERSION.SDK_INT < Build.VERSION_CODES.S ||
+        context.getSystemService(AlarmManager::class.java).canScheduleExactAlarms()
 
     fun cancel(context: Context, id: Int) {
         context.getSystemService(AlarmManager::class.java).cancel(alarmIntent(context, id, 0))

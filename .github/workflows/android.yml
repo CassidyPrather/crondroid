@@ -31,6 +31,10 @@ jobs:
       - name: Test, lint and build
         run: gradle --no-daemon testDebugUnitTest lintRelease assembleRelease
 
+      - name: Show lint report
+        if: failure()
+        run: cat app/build/intermediates/lint_intermediate_text_report/release/lintReportRelease/lint-results-release.txt || true
+
       - name: Rename APK
         run: cp app/build/outputs/apk/release/app-release.apk crondroid.apk
 

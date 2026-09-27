@@ -1,7 +1,6 @@
 package com.cassidyprather.crondroid.ui
 
 import android.Manifest
-import android.app.AlarmManager
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
@@ -27,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import com.cassidyprather.crondroid.AlarmScheduler
 
 private data class Requirement(
     val title: String,
@@ -96,11 +96,13 @@ private fun requirements(context: Context, requestNotifications: () -> Unit): Li
             grant = openSettings(Settings.ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT),
         )
     }
-    list += Requirement(
-        title = "Alarms & reminders",
-        why = "Lets schedules fire at the exact minute.",
-        granted = context.getSystemService(AlarmManager::class.java).canScheduleExactAlarms(),
-        grant = openSettings(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM),
-    )
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        list += Requirement(
+            title = "Alarms & reminders",
+            why = "Lets schedules fire at the exact minute.",
+            granted = AlarmScheduler.canScheduleExact(context),
+            grant = openSettings(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM),
+        )
+    }
     return list
 }
