@@ -1,0 +1,27 @@
+# cargo-audit settings. See: cargo audit --help
+#
+# The default split is already the one that matters, so it is left alone:
+#
+#   vulnerabilities          -> exit 1, CI fails
+#   unmaintained / unsound   -> printed, exit 0, CI passes
+#   yanked crates            -> printed, exit 0, CI passes
+#
+# That is deliberate. The informational advisories are the ones that pile up
+# on transitive crates you do not control and cannot fix, so making them
+# blocking is how a security gate becomes background noise people mute. Add
+# `--deny warnings` to the CI step only if you actually intend to chase them.
+#
+# `severity_threshold` (a CVSS rating: none/low/medium/high/critical) is
+# deliberately NOT set. Roughly two thirds of RustSec advisories carry no CVSS
+# score at all and are reported regardless of the threshold, so it only
+# filters the scored minority -- while silently passing real medium-severity
+# vulnerabilities with no output. Blanket severity cuts hide; a targeted
+# ignore defers in the open.
+#
+# When an advisory fires that you cannot act on yet, name it here with a
+# reason and a date, and revisit it. That keeps the gate meaningful and the
+# deferral reviewable in the diff.
+[advisories]
+ignore = [
+    # "RUSTSEC-0000-0000", # why, and when to look again
+]
