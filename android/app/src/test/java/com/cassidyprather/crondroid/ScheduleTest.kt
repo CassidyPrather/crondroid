@@ -61,6 +61,8 @@ class ScheduleTest {
         assertEquals(original, Schedule.fromJson(original.toJson()))
         val noApp = original.copy(packageName = null, days = emptySet())
         assertEquals(noApp, Schedule.fromJson(noApp.toJson()))
+        val audio = original.copy(audioOnly = true)
+        assertEquals(audio, Schedule.fromJson(audio.toJson()))
     }
 
     @Test

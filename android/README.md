@@ -34,6 +34,12 @@ Tap **New schedule**, then:
   opens in the app instead of a browser. Leave the link empty and pick an app to just
   open that app.
 - **Test now**: runs the schedule right away so you can check it.
+- **Audio only** (Twitch channel links only): Crondroid plays the stream's sound itself,
+  with no need to unlock the phone. Play, pause and stop controls appear on the lock screen
+  and in the notification shade. If the channel isn't live yet, it keeps checking for 15
+  minutes. Twitch has no official way to do this, so Crondroid uses the same unofficial
+  method as Twitch's website and tools like Streamlink. If Twitch changes it, audio-only
+  schedules stop working until the app is updated. Ads in the stream still play.
 
 When a schedule fires with the phone locked, the screen turns on and asks you to unlock,
 then opens the link. A small alarm icon in the status bar shows that a schedule is armed.
@@ -46,6 +52,9 @@ then opens the link. A small alarm icon in the status bar shows that a schedule 
   may display over other apps. Otherwise it posts a full-screen notification. Then it
   arms the next repeat.
 - `FireActivity` shows over the lock screen, asks you to unlock, and opens the target.
+- For audio-only schedules, `AlarmReceiver` starts `AudioService` instead. `Twitch`
+  looks up the channel's audio-only HLS playlist, and `AudioService` plays it with
+  ExoPlayer as a media-playback foreground service with a media session.
 - `RescheduleReceiver` re-arms everything after a reboot, an app update, or a clock or
   time zone change.
 

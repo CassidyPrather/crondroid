@@ -52,7 +52,7 @@ class MainActivity : ComponentActivity() {
                             reload()
                             editing = null
                         },
-                        onTest = { Launcher.open(this, it) },
+                        onTest = { if (!(it.audioOnly && AudioService.start(this, it))) Launcher.open(this, it) },
                         onBack = { editing = null },
                     )
                 }

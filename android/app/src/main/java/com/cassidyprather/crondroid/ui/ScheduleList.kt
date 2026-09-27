@@ -77,10 +77,14 @@ fun ScheduleListScreen(
 @Suppress("UNUSED_PARAMETER") // refreshKey keeps the "opens in" countdown current on resume.
 private fun ScheduleCard(schedule: Schedule, refreshKey: Int, onClick: () -> Unit, onToggle: (Boolean) -> Unit) {
     val context = LocalContext.current
-    val target = listOfNotNull(
-        schedule.url.ifBlank { null },
-        schedule.packageName?.let { "in " + Launcher.appLabel(context, it) },
-    ).joinToString(" ")
+    val target = if (schedule.audioOnly) {
+        "Audio only · ${schedule.url}"
+    } else {
+        listOfNotNull(
+            schedule.url.ifBlank { null },
+            schedule.packageName?.let { "in " + Launcher.appLabel(context, it) },
+        ).joinToString(" ")
+    }
     Card(Modifier.fillMaxWidth().clickable(onClick = onClick)) {
         Row(Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
             Column(Modifier.weight(1f)) {

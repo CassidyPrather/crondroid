@@ -28,6 +28,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimePicker
@@ -47,6 +48,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.cassidyprather.crondroid.Launcher
 import com.cassidyprather.crondroid.Schedule
+import com.cassidyprather.crondroid.Twitch
 import java.time.DayOfWeek
 import java.time.format.TextStyle
 import java.util.Locale
@@ -66,9 +68,11 @@ fun EditScheduleScreen(
     var url by rememberSaveable { mutableStateOf(initial.url) }
     var packageName by rememberSaveable { mutableStateOf(initial.packageName) }
     var days by rememberSaveable { mutableStateOf(initial.days.map { it.value }.toSet()) }
+    var audioOnly by rememberSaveable { mutableStateOf(initial.audioOnly) }
     val time = rememberTimePickerState(initial.hour, initial.minute, DateFormat.is24HourFormat(context))
 
     val normalizedUrl = Schedule.normalizeUrl(url)
+    val twitchChannel = Twitch.channelFromUrl(normalizedUrl)
     val edited = initial.copy(
         name = name.trim(),
         hour = time.hour,
@@ -77,6 +81,7 @@ fun EditScheduleScreen(
         url = normalizedUrl,
         packageName = packageName,
         enabled = if (isNew) true else initial.enabled,
+        audioOnly = audioOnly && twitchChannel != null,
     )
     val valid = normalizedUrl.isNotBlank() || packageName != null
 
@@ -122,7 +127,23 @@ fun EditScheduleScreen(
                 modifier = Modifier.fillMaxWidth(),
             )
 
-            AppPicker(url = normalizedUrl, selected = packageName, onSelect = { packageName = it })
+            if (twitchChannel != null) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Column(Modifier.weight(1f).padding(end = 8.dp)) {
+                        Text("Audio only", style = MaterialTheme.typography.bodyLarge)
+                        Text(
+                            "Crondroid plays $twitchChannel's sound itself, even with your phone locked. " +
+                                "Uses an unofficial Twitch method that may break.",
+                            style = MaterialTheme.typography.bodySmall,
+                        )
+                    }
+                    Switch(checked = audioOnly, onCheckedChange = { audioOnly = it })
+                }
+            }
+
+            if (!edited.audioOnly) {
+                AppPicker(url = normalizedUrl, selected = packageName, onSelect = { packageName = it })
+            }
 
             OutlinedTextField(
                 value = name,

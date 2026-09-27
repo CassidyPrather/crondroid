@@ -9,6 +9,7 @@ import java.time.ZonedDateTime
 /**
  * One scheduled launch: at [hour]:[minute] on each of [days] (or once, when [days] is empty),
  * open [url], optionally in the app [packageName]. With no URL, just open that app.
+ * With [audioOnly] and a Twitch channel URL, Crondroid plays the stream's audio itself instead.
  */
 data class Schedule(
     val id: Int,
@@ -19,6 +20,7 @@ data class Schedule(
     val url: String,
     val packageName: String?,
     val enabled: Boolean,
+    val audioOnly: Boolean = false,
 ) {
     val repeats: Boolean get() = days.isNotEmpty()
 
@@ -45,6 +47,7 @@ data class Schedule(
         .put("url", url)
         .put("packageName", packageName ?: JSONObject.NULL)
         .put("enabled", enabled)
+        .put("audioOnly", audioOnly)
 
     companion object {
         // "https:", "twitch:", "mailto:" etc., but not "host:8080".
@@ -61,6 +64,7 @@ data class Schedule(
                 url = json.optString("url"),
                 packageName = if (json.isNull("packageName")) null else json.getString("packageName"),
                 enabled = json.optBoolean("enabled", true),
+                audioOnly = json.optBoolean("audioOnly", false),
             )
         }
 

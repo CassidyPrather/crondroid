@@ -2,6 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- Audio-only schedules: stream Twitch audio in the background. -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <!-- Exact alarms: auto-granted on Android 13+ via USE_EXACT_ALARM. -->
     <uses-permission
@@ -55,6 +60,11 @@
             android:showWhenLocked="true"
             android:taskAffinity=""
             android:turnScreenOn="true" />
+
+        <service
+            android:name=".AudioService"
+            android:exported="false"
+            android:foregroundServiceType="mediaPlayback" />
 
         <receiver
             android:name=".AlarmReceiver"

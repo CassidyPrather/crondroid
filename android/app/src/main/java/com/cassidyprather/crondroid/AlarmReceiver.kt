@@ -36,6 +36,9 @@ class AlarmReceiver : BroadcastReceiver() {
         private const val CHANNEL_ID = "launches"
 
         fun fire(context: Context, schedule: Schedule) {
+            // Audio-only schedules need no screen at all. If Android won't let us start playback,
+            // fall through and open the link the normal way.
+            if (schedule.audioOnly && AudioService.start(context, schedule)) return
             val launch = FireActivity.intent(context, schedule.id)
             if (Settings.canDrawOverlays(context)) {
                 // "Display over other apps" exempts us from background activity-start limits.
